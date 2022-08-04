@@ -16,6 +16,7 @@ enum Token {
     Load,
     Swap,
     Jump,
+    Shift,
 }
 
 pub fn start(source: String) -> Result<(), String> {
@@ -32,6 +33,7 @@ pub fn start(source: String) -> Result<(), String> {
             "<" => Token::Load,
             "%" => Token::Swap,
             "!" => Token::Jump,
+            "^" => Token::Shift,
             _ => {
                 if token.starts_with("0x") {
                     let rest = token.trim_start_matches("0x");
@@ -64,8 +66,6 @@ pub fn start(source: String) -> Result<(), String> {
             Token::Nand => {
                 if let (Some(a), Some(b)) = (memory.pop_front(), memory.pop_front()) {
                     let result = !(a & b);
-                    memory.push_front(a);
-                    memory.push_front(b);
                     memory.push_front(result);
                 }
             }
@@ -81,9 +81,19 @@ pub fn start(source: String) -> Result<(), String> {
             Token::Jump => {
                 let value = memory.pop_front().unwrap();
                 let new_counter = memory.pop_front().unwrap();
-                if value == 0 {
+                if value != 0 {
                     prog_counter = new_counter as usize;
                     should_increment_prog_counter = false;
+                }
+            }
+            Token::Shift => {
+                let shift = memory.pop_front().unwrap();
+                let value = memory.pop_front().unwrap();
+
+                if value < 0 {
+                    memory.push_front(value >> shift.abs())
+                } else {
+                    memory.push_front(value << shift)
                 }
             }
         };
