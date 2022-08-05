@@ -17,6 +17,7 @@ enum Token {
     Swap,
     Jump,
     Shift,
+    Halt,
 }
 
 pub fn start(source: String) -> Result<(), String> {
@@ -34,6 +35,7 @@ pub fn start(source: String) -> Result<(), String> {
             "%" => Token::Swap,
             "!" => Token::Jump,
             "^" => Token::Shift,
+            "." => Token::Halt,
             _ => {
                 if token.starts_with("0x") {
                     let rest = token.trim_start_matches("0x");
@@ -54,6 +56,8 @@ pub fn start(source: String) -> Result<(), String> {
     let mut prog_counter = 0;
 
     let mut memory: VecDeque<Word> = VecDeque::new();
+
+    let mut should_halt = false;
 
     while prog_counter < tokens.len() {
         let token = &tokens[prog_counter];
@@ -96,6 +100,9 @@ pub fn start(source: String) -> Result<(), String> {
                     memory.push_front(value << shift)
                 }
             }
+            Token::Halt => {
+                should_halt = true;
+            }
         };
 
         println!(
@@ -105,6 +112,10 @@ pub fn start(source: String) -> Result<(), String> {
 
         if should_increment_prog_counter {
             prog_counter += 1;
+        }
+
+        if should_halt {
+            break;
         }
     }
 
