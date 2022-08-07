@@ -81,10 +81,8 @@ fn main() {
      */
 
     let function_with_halt = "
-    6
-    15 5
-    7 1 !
-    .
+    6 15 5 35  1
+    ! .
 
     1 > % 0 >
     < n n < %
@@ -92,8 +90,73 @@ fn main() {
     0 > * %
     0 > * %
     < % < 1 !
-    .
+
+
+    43 1 > < !
+    82 1 !
+    53 2 > < 2 > < 7 1 !
+    2 > < 2 > < n 0 > < n
+
+    1 > %
+
+    1 ^ 0 > * * * *
+    % < % <
+
+    35 1 !
+
+    *
+    0 > * %
+    0 > * %
+    < % < 1 !
+
     ";
+
+    /*
+    a, b
+
+    #add
+    loop b jnz
+    end 1 !
+    #loop
+    c = a & b
+
+    a = a ^ b
+
+    b = c 1 <<
+
+    b loop jnz
+
+    #end
+    0 > * %
+    0 > * %
+    < % < 1 !
+
+
+    0101
+    1010
+    */
+
+    /*
+        // Iterate till there is no carry
+    while (y != 0)
+    {
+        // carry should be unsigned to
+        // deal with -ve numbers
+        // carry now contains common
+        //set bits of x and y
+        unsigned carry = x & y;
+
+        // Sum of bits of x and y where at
+        //least one of the bits is not set
+        x = x ^ y;
+
+        // Carry is shifted by one so that adding
+        // it to x gives the required sum
+        y = carry << 1;
+    }
+
+    return x;
+    */
 
     nand_lang::start(function_with_halt.to_string()).unwrap();
 }

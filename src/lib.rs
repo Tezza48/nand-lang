@@ -5,7 +5,7 @@ mod tests {
     fn test_test() {}
 }
 
-type Word = i32;
+type Word = u8;
 
 #[derive(Debug)]
 enum Token {
@@ -94,11 +94,12 @@ pub fn start(source: String) -> Result<(), String> {
                 let shift = memory.pop_front().unwrap();
                 let value = memory.pop_front().unwrap();
 
-                if value < 0 {
-                    memory.push_front(value >> shift.abs())
-                } else {
-                    memory.push_front(value << shift)
-                }
+                // Only support eleft shift for now
+                // if value < 0 {
+                //     memory.push_front(value >> shift.abs())
+                // } else {
+                // }
+                memory.push_front(value << shift)
             }
             Token::Halt => {
                 should_halt = true;
